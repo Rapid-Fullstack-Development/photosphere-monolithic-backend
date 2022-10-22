@@ -1,17 +1,25 @@
 @base_url = http://localhost:3000
 
 ###
+# @name upload_asset
+#
 # Uploads an asset.
 #
 
 POST {{base_url}}/asset
 Content-Type: image/png
 File-Name: Placeholder.png
+Width: 255
+Height: 255
 
 < ./test/Placeholder.png
 
+
+@upload_asset_id = {{upload_asset.response.body.assetId}}
+
+
 ###
-# Retrieves an asset.
+# Retrieve an asset.
 #
 
-GET {{base_url}}/asset?fileName=Placeholder.png
+GET {{base_url}}/asset?id={{upload_asset_id}}

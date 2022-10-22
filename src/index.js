@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -25,32 +25,44 @@ async function main() {
 
     const app = express();
 
-    app.post("/asset", (req, res) => {
-        
+    app.post("/asset", async (req, res) => {
+	
+        const assetId = new ObjectId();
         const fileName = req.headers["file-name"];
-        const localFileName = path.join(__dirname, "../uploads", fileName);
-        const fileWriteStream = fs.createWriteStream(localFileName);
-        req.pipe(fileWriteStream)
-            .on("error", err => {
-                console.error(`Error writing ${localFileName}`);
-                console.error(err);
-                res.sendStatus(500);
-            })
-            .on("finish", () => {
-                console.log(`Done writing ${localFileName}`);
-                res.sendStatus(200);
-            });    
+        const contentType = req.headers["content-type"];
+        const width = parseInt(req.headers["width"]);
+        const height = parseInt(req.headers["height"]);
+        const localFileName = path.join(__dirname, "../uploads", assetId.toString());
+    
+        await streamToStorage(localFileName, req);    
+    
+        await assetCollections.insertOne({
+            _id: assetId,
+            origFileName: fileName,
+            contentType: contentType,            
+            src: `/asset?id=${assetId}`,
+            thumb: `/asset?id=${assetId}`,
+            width: width,
+            height: height,
+        });
+    
+        res.json({
+            assetId: assetId,
+        });
     });
 
-    app.get("/asset", (req, res) => {
+    app.get("/asset", async (req, res) => {
 
-        const fileName = req.query.fileName;
-        const localFileName = path.join(__dirname, "../uploads", fileName);
-
+        const assetId = req.query.id;
+    
+        const localFileName = path.join(__dirname, "../uploads", assetId);
+    
+        const asset = await assetCollections.findOne({ _id: new ObjectId(assetId) });
+    
         res.writeHead(200, {
-            "Content-Type": "image/png",
+            "Content-Type": asset.contentType,
         });
-
+    
         const fileReadStream = fs.createReadStream(localFileName);
         fileReadStream.pipe(res);
     });
@@ -66,3 +78,19 @@ main()
         console.error(err);
         process.exit(1);
     });
+
+//
+// Streams an input stream to local file storage.
+//
+function streamToStorage(localFileName, inputStream) {
+    return new Promise((resolve, reject) => {
+        const fileWriteStream = fs.createWriteStream(localFileName);
+        inputStream.pipe(fileWriteStream)
+            .on("error", err => {
+                reject(err);
+            })
+            .on("finish", () => {
+                resolve();
+            });
+    });
+}
