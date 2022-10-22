@@ -1,0 +1,9 @@
+###
+# Uploads an asset.
+#
+
+POST http://localhost:3000/asset
+Content-Type: image/png
+File-Name: Placeholder.png
+
+< ./test/Placeholder.png
