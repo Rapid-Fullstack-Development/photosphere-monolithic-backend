@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
+const { MongoClient } = require('mongodb');
 
 const PORT = process.env.PORT;
 if (!PORT) {
@@ -8,6 +9,20 @@ if (!PORT) {
 }
 
 async function main() {
+
+    const dbName = "photosphere";
+
+    const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
+    if (DB_CONNECTION_STRING === undefined) {
+        throw new Error(`Set environment variable DB_CONNECTION_STRING.`);
+    }
+
+    const client = new MongoClient(DB_CONNECTION_STRING);
+    await client.connect();
+
+    const db = client.db(dbName);
+    const assetCollections = db.collection("assets");
+
     const app = express();
 
     app.post("/asset", (req, res) => {
