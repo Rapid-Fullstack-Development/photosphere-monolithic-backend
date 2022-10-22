@@ -1,8 +1,10 @@
+@base_url = http://localhost:3000
+
 ###
 # Uploads an asset.
 #
 
-POST http://localhost:3000/asset
+POST {{base_url}}/asset
 Content-Type: image/png
 File-Name: Placeholder.png
 
@@ -12,4 +14,4 @@ File-Name: Placeholder.png
 # Retrieves an asset.
 #
 
-GET http://localhost:3000/asset?fileName=Placeholder.png
+GET {{base_url}}/asset?fileName=Placeholder.png
