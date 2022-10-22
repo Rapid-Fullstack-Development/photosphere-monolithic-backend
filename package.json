@@ -19,6 +19,7 @@
         "nodemon": "^2.0.16"
     },
     "dependencies": {
+        "cors": "^2.8.5",
         "express": "^5.0.0-beta.1",
         "mongodb": "^4.7.0"
     }
