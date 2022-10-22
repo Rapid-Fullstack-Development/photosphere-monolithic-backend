@@ -7,12 +7,32 @@
 #
 
 POST {{base_url}}/asset
-Content-Type: image/png
-File-Name: Placeholder.png
-Width: 255
-Height: 255
+Content-Type: image/jpeg
+File-Name: ./test-assets/1.jpeg
+Width: 4160
+Height: 6240
 
-< ./test/Placeholder.png
+< ./test-assets/1.jpeg
+
+###
+
+POST {{base_url}}/asset
+Content-Type: image/jpeg
+File-Name: ./test-assets/2.jpeg
+Width: 6336
+Height: 9504
+
+< ./test-assets/2.jpeg
+
+###
+
+POST {{base_url}}/asset
+Content-Type: image/jpeg
+File-Name: ./test-assets/3.jpeg
+Width: 3361
+Height: 5041
+
+< ./test-assets/3.jpeg
 
 
 @upload_asset_id = {{upload_asset.response.body.assetId}}
