@@ -7,3 +7,9 @@ Content-Type: image/png
 File-Name: Placeholder.png
 
 < ./test/Placeholder.png
+
+###
+# Retrieves an asset.
+#
+
+GET http://localhost:3000/asset?fileName=Placeholder.png
