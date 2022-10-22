@@ -2,7 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const express = require("express");
 const app = express();
-const port = 3000;
+
+const PORT = process.env.PORT;
+if (!PORT) {
+    throw new Error(`Set environment variable PORT.`);
+}
 
 app.post("/asset", (req, res) => {
     
@@ -34,6 +38,6 @@ app.get("/asset", (req, res) => {
     fileReadStream.pipe(res);
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`);
 });

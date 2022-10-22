@@ -5,12 +5,13 @@
     "main": "src/index.js",
     "scripts": {
         "start": "node src/index.js",
-        "start:dev": "nodemon src/index.js"
+        "start:dev": "cross-env PORT=3000 nodemon src/index.js"
     },
     "keywords": [],
     "author": "ashley@codecapers.com.au",
     "license": "MIT",
     "devDependencies": {
+        "cross-env": "^7.0.3",
         "nodemon": "^2.0.16"
     },
     "dependencies": {
