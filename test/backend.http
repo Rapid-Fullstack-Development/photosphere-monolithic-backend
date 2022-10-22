@@ -23,3 +23,9 @@ Height: 255
 #
 
 GET {{base_url}}/asset?id={{upload_asset_id}}
+
+###
+# Retrieve all assets.
+#
+
+GET {{base_url}}/assets
