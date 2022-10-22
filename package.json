@@ -4,9 +4,13 @@
     "description": "",
     "main": "src/index.js",
     "scripts": {
-        "start": "node src/index.js"
+        "start": "node src/index.js",
+        "start:dev": "nodemon src/index.js"
     },
     "keywords": [],
     "author": "ashley@codecapers.com.au",
-    "license": "MIT"
+    "license": "MIT",
+    "devDependencies": {
+        "nodemon": "^2.0.16"
+    }
 }
