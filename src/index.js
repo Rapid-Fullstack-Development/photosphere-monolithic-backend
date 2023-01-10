@@ -34,6 +34,7 @@ async function main() {
         const contentType = req.headers["content-type"];
         const width = parseInt(req.headers["width"]);
         const height = parseInt(req.headers["height"]);
+        const hash = req.headers["hash"];
         const localFileName = path.join(__dirname, "../uploads", assetId.toString());
     
         await streamToStorage(localFileName, req);    
@@ -41,11 +42,12 @@ async function main() {
         await assetCollections.insertOne({
             _id: assetId,
             origFileName: fileName,
-            contentType: contentType,            
+            contentType: contentType,
             src: `/asset?id=${assetId}`,
             thumb: `/asset?id=${assetId}`,
             width: width,
             height: height,
+            hash: hash,
         });
     
         res.json({
@@ -67,6 +69,18 @@ async function main() {
     
         const fileReadStream = fs.createReadStream(localFileName);
         fileReadStream.pipe(res);
+    });
+
+    app.get("/check-asset", async (req, res) => {
+        
+        const hash = req.query.hash;
+        const asset = await assetCollections.findOne({ hash: hash });
+        if (asset) {
+            res.sendStatus(200);
+        }
+        else {
+            res.sendStatus(404);
+        }    
     });
 
     app.get("/assets", async (req, res) => {
